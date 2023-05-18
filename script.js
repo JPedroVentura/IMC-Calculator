@@ -12,6 +12,16 @@ const imcCalculatorContainer = document.querySelector('.imc-calculator');
 const message = document.querySelector('#message');
 const showImc = document.querySelector('#imc');
 
+//Caixa de alerta
+function errorBox() {
+  return Swal.fire({
+    title: 'Ops!',
+    text: 'Alguma coisa deu errado!',
+    icon: 'warning',
+    confirmButtonText: 'Tentar novamente'
+  });
+}
+
 // Função para atualizar estilos do resultado
 function updateResultStyles(currentStatus, backgroundColor) {
   result.style.animation = `heightAnimation ${ANIMATION_DURATION}`;
@@ -65,8 +75,8 @@ function handleCalcButtonClick(event) {
   const heightValue = heightInput.value.replace(',', '.');
   const weightValue = weightInput.value.replace(',', '.');
 
-  if (isNaN(heightValue) || isNaN(weightValue)) {
-    alert('Altura ou Peso inválido!');
+  if ((isNaN(heightValue) || isNaN(weightValue)) || (heightValue <= 0 || weightValue <= 0) || (heightValue === '' || weightValue === '')) {
+    errorBox();
     return;
   }
 
@@ -74,9 +84,11 @@ function handleCalcButtonClick(event) {
   const { currentStatus, backgroundColor } = getIMCStatus(imc);
 
   updateResultStyles(currentStatus, backgroundColor);
-  showImc.innerText = `Seu IMC: ${imc.toFixed(2)}`;
+  showImc.innerText = `Seu IMC é: ${imc.toFixed(2)}`;
 }
 
 // Event listeners
 window.addEventListener('resize', handleWindowResize);
 btnCalc.addEventListener('click', handleCalcButtonClick);
+
+
